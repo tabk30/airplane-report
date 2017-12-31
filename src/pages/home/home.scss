@@ -1,3 +1,121 @@
 page-home {
+    *,*:before,*:after {
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 16px;
+      }
+      
+      .plane {
+        margin: 20px auto;
+        max-width: 500px;
+      }
+      
+      .cockpit {
+        height: 250px; 
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        border-bottom: 5px solid #d8d8d8;
+        &:before {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 500px;
+          width: 100%;
+          border-radius: 50%;
+          border-right: 5px solid #d8d8d8;
+          border-left: 5px solid #d8d8d8;
+        }
+        h1 {
+          width: 60%;
+          margin: 100px auto 35px auto !important;
+        }
+      }
+      
+      .exit {
+        position: relative;
+        height: 50px;
+        &:before,
+        &:after {
+          content: "EXIT";
+          font-size: 14px;
+          line-height: 18px;
+          padding: 0px 2px;
+          font-family: "Arial Narrow", Arial, sans-serif;
+          display: block;
+          position: absolute;
+          background: green;
+          color: white;
+          top: 50%;
+          transform: translate(0, -50%);
+        }
+        &:before {
+          left: 0;
+        }
+        &:after {
+          right: 0;
+        }
+      }
+      
+      .fuselage {
+        border-right: 5px solid #d8d8d8;
+        border-left: 5px solid #d8d8d8;
+      }
+      
+      .seat {
+        margin: 3px;
+        padding: 0px;
+        text-align: center;
+        button {
+          background: url("../assets/imgs/SEAT-Y-AVAILABLE.png");
+          height: 40px;
+          width: 40px;
+          background-repeat: no-repeat;
+          padding: 0px 0px 12px 0px;
+          font-size: 0.7em;
+          margin: 0px;
+        }
 
+        button:active {
+          background: url("../assets/imgs/SEAT-Y-AVAILABLE-SELECTED.png");
+          height: 40px;
+          width: 40px;
+          background-repeat: no-repeat;
+          padding: 0px 0px 15px 0px;
+          font-weight: bold;
+          font-size: 0.8em;
+          margin: 0px;
+        }
+      }
+
+      .seatA {
+        margin: 3px;
+        padding: 0px;
+        text-align: center;
+        button {
+          background: url("../assets/imgs/SEAT-F-AVAILABLE.png");
+          height: 60px;
+          width: 60px;
+          background-repeat: no-repeat;
+          padding: 0px 0px 15px 0px;
+          font-size: 1em;
+          margin: 0px;
+        }
+
+        button:active {
+          background: url("../assets/imgs/SEAT-F-AVAILABLE-SELECTED.png");
+          height: 60px;
+          width: 60px;
+          background-repeat: no-repeat;
+          padding: 0px 0px 15px 0px;
+          font-weight: bold;
+          font-size: 1.1em;
+          margin: 0px;
+        }
+      }
+      
+      
 }
