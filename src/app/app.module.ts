@@ -17,7 +17,8 @@ import { File } from '@ionic-native/file';
 import { Transfer } from '@ionic-native/transfer';
 import { FilePath } from '@ionic-native/file-path';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
-
+import { SQLite } from '@ionic-native/sqlite';
+import { SqliteProvider } from '../providers/sqlite/sqlite';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,9 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
     File,
     Transfer,
     FilePath,
-    AndroidPermissions
+    AndroidPermissions,
+    SQLite,
+    SqliteProvider
   ]
 })
 export class AppModule {}

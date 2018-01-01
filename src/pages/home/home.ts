@@ -39,7 +39,7 @@ export class HomePage {
     setTimeout(
       ()=> {
         this.loading.close();
-        this.navCtrl.push(ReportPage);
+        this.navCtrl.push(ReportPage, {seatId: seatId});
       },
       500
     );

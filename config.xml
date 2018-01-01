@@ -92,4 +92,5 @@
     <plugin name="cordova-plugin-filepath" spec="^1.1.0" />
     <allow-navigation href="http://192.168.0.101:8101" />
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
+    <plugin name="cordova-sqlite-storage" spec="^2.1.4" />
 </widget>

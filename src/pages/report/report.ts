@@ -5,6 +5,9 @@ import { Platform } from 'ionic-angular';
 import { Transfer } from '@ionic-native/transfer';
 import { FilePath } from '@ionic-native/file-path';
 import { File } from '@ionic-native/file';
+import { SqliteProvider } from '../../providers/sqlite/sqlite';
+import { ListPage } from '../list/list';
+import { LoadingProvider } from '../../providers/loading/loading';
 
 declare var cordova: any;
 
@@ -19,7 +22,9 @@ declare var cordova: any;
   templateUrl: 'report.html',
 })
 export class ReportPage {
-  public base64Image: string;
+  public imagePath: string = null;
+  private seatId: string;
+  private report: string;
 
   constructor(
     public navCtrl: NavController,
@@ -28,12 +33,14 @@ export class ReportPage {
     public platform: Platform,
     private transfer: Transfer,
     private file: File,
-    private filePath: FilePath
+    private filePath: FilePath,
+    private sql: SqliteProvider,
+    private loading: LoadingProvider
   ) {
+    this.seatId = this.navParams.get('seatId');
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ReportPage');
     this.takePicture();
   }
 
@@ -57,15 +64,21 @@ export class ReportPage {
     }
 
     this.camera.getPicture(options).then((imagePath) => {
-      console.log("ReportPage:takePicture success imageData", imagePath);
-      this.base64Image = imagePath;
       if (this.platform.is('android')) {
         this.filePath.resolveNativePath(imagePath)
           .then(filePath => {
-            this.base64Image = filePath;
+            let correctPath: string = filePath.substr(0, filePath.lastIndexOf('/') + 1);
+            let currentName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.length);
+
+            let newPath = correctPath.replace("cache/", "files/");
+            this.copyFileToLocalDir(correctPath, currentName, newPath, this.createFileName());
           });
       } else {
-        this.base64Image = imagePath;
+        let correctPath: string = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
+        let currentName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.length);
+
+        let newPath = correctPath.replace("cache/", "files/");
+        this.copyFileToLocalDir(correctPath, currentName, newPath, this.createFileName());
       }
     }, (err) => {
       // Handle error
@@ -81,14 +94,27 @@ export class ReportPage {
   }
 
   // Copy the image to a local folder
-  private copyFileToLocalDir(namePath, currentName, newpath,  newFileName) {
-    console.log("ReportPage:copyFileToLocalDir namePath, currentName, newFileName", namePath, currentName, newFileName, cordova.file.dataDirectory);
+  private copyFileToLocalDir(namePath, currentName, newpath, newFileName) {
     this.file.copyFile(namePath, currentName, newpath, newFileName).then(success => {
-      console.log("ReportPage:copyFileToLocalDir success imageData", newFileName);
-      this.base64Image = newpath + newFileName;
+      this.imagePath = newpath + newFileName;
     }, error => {
       console.log("ReportPage:copyFileToLocalDir error", error);
     });
+  }
+
+  public saveData() {
+    this.loading.startLoading();
+    setTimeout(
+      () => {
+        this.loading.close();
+        let day = new Date();
+        let createAt: string = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate() + ' ' + day.getHours() + ' ' + day.getMinutes();
+        this.sql.insertReport(this.seatId, this.report, this.imagePath, 0, createAt);
+        this.navCtrl.push(ListPage);
+      },
+      500
+    );
+
   }
 
 }
