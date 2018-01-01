@@ -13,6 +13,11 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoadingProvider } from '../providers/loading/loading';
 
+import { File } from '@ionic-native/file';
+import { Transfer } from '@ionic-native/transfer';
+import { FilePath } from '@ionic-native/file-path';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+
 
 @NgModule({
   declarations: [
@@ -37,7 +42,11 @@ import { LoadingProvider } from '../providers/loading/loading';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Camera,
-    LoadingProvider
+    LoadingProvider,
+    File,
+    Transfer,
+    FilePath,
+    AndroidPermissions
   ]
 })
 export class AppModule {}

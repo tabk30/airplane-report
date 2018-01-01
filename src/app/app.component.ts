@@ -5,6 +5,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
+import { ReportPage } from '../pages/report/report';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -16,15 +19,30 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(
+    public platform: Platform, 
+    public statusBar: StatusBar, 
+    public splashScreen: SplashScreen,
+    private androidPermissions: AndroidPermissions) {
     this.initializeApp();
+    this.getAndroidPermission();
 
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Report', component: HomePage },
-      { title: 'Report List', component: ListPage }
+      { title: 'Report List', component: ListPage },
+      { title: 'Report Edit', component: ReportPage }
     ];
 
+  }
+
+  public getAndroidPermission(){
+    if(this.platform.is("android")){
+      this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
+        result => console.log('Has permission?',result.hasPermission),
+        err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)
+      );
+    }
   }
 
   initializeApp() {
