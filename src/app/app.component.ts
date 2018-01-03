@@ -7,6 +7,8 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { ReportPage } from '../pages/report/report';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { NetworkCheckingProvider } from '../providers/network-checking/network-checking';
+import { ToastController } from 'ionic-angular';
 
 
 @Component({
@@ -16,22 +18,40 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = HomePage;
-
+  private toast;
   pages: Array<{title: string, component: any}>;
 
   constructor(
     public platform: Platform, 
     public statusBar: StatusBar, 
     public splashScreen: SplashScreen,
-    private androidPermissions: AndroidPermissions) {
+    private androidPermissions: AndroidPermissions,
+    private network:NetworkCheckingProvider,
+    private toastCtrl: ToastController
+  ) {
+    this.toast = this.toastCtrl.create({
+      message: 'Đồng bộ dữ liệu',
+      duration: 10000,
+      position: 'bottom'
+    });
+    this.toast.onDidDismiss(() => {
+      console.log('Dismissed toast');
+    });
     this.initializeApp();
     this.getAndroidPermission();
+    this.network.onNetworkStatusChange.subscribe(
+      (data)=>{
+        console.log("MyApp:onNetworkStatusChange", data);
+        if(data.status == 'connected'){
+          this.toast.present();
+        }
+      }
+    );
 
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Report', component: HomePage },
-      { title: 'Report List', component: ListPage },
-      { title: 'Report Edit', component: ReportPage }
+      { title: 'Report List', component: ListPage }
     ];
 
   }

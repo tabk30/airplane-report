@@ -8,61 +8,63 @@
 </ion-header>
 
 <ion-content padding>
-  <div class="plane">
-    <div class="cockpit">
-      <h1>Please select a seat</h1>
-    </div>
-    <div class="exit exit--front fuselage">
+  <div style="overflow: scroll;height:90%; overflow-y: hidden;">
+    <div id="container_2" class="plane">
+      <div class="cockpit">
+        <h1>Please select a seat</h1>
+      </div>
+      <div class="exit exit--front fuselage">
 
-    </div>
+      </div>
 
-    <ion-grid class="cabin fuselage">
-      <ion-row *ngFor="let item of createRange(seatBlockA.seatRow);let i = index">
-        <ion-col class="seatA">
-          <button (click)="reportSeat(i + seatBlockA.rowStart + 'A')"> {{i+1}}A </button>
-        </ion-col>
-        <ion-col class="seatA">
-          <button (click)="reportSeat(i + seatBlockA.rowStart + 'B')"> {{i+1}}B </button>
-        </ion-col>
-        <ion-col col-auto style="margin: 0px 10px;">
+      <ion-grid class="cabin fuselage">
+        <ion-row *ngFor="let item of createRange(seatBlockA.seatRow);let i = index">
+          <ion-col class="seatA">
+            <button (click)="reportSeat(i + seatBlockA.rowStart + 'A')"> {{i+1}}A </button>
+          </ion-col>
+          <ion-col class="seatA">
+            <button (click)="reportSeat(i + seatBlockA.rowStart + 'B')"> {{i+1}}B </button>
+          </ion-col>
+          <ion-col col-auto style="margin: 0px 10px;">
 
-        </ion-col>
-        <ion-col class="seatA">
+          </ion-col>
+          <ion-col class="seatA">
             <button (click)="reportSeat(i + seatBlockA.rowStart + 'C')"> {{i+1}}C </button>
-        </ion-col>
-        <ion-col class="seatA">
+          </ion-col>
+          <ion-col class="seatA">
             <button (click)="reportSeat(i + seatBlockA.rowStart + 'D')"> {{i+1}}D </button>
-        </ion-col>
-      </ion-row>
+          </ion-col>
+        </ion-row>
 
-      <ion-row *ngFor="let item of createRange(seatBlockB.seatRow);let i = index">
-        <ion-col class="seat">
+        <ion-row *ngFor="let item of createRange(seatBlockB.seatRow);let i = index">
+          <ion-col class="seat">
             <button (click)="reportSeat(i + seatBlockB.rowStart + 'A')"> {{i+seatBlockB.rowStart}}A </button>
-        </ion-col>
-        <ion-col class="seat">
+          </ion-col>
+          <ion-col class="seat">
             <button (click)="reportSeat(i + seatBlockB.rowStart + 'B')"> {{i+seatBlockB.rowStart}}B </button>
-        </ion-col>
-        <ion-col class="seat">
+          </ion-col>
+          <ion-col class="seat">
             <button (click)="reportSeat(i + seatBlockB.rowStart + 'C')"> {{i+seatBlockB.rowStart}}C </button>
-        </ion-col>
-        <ion-col col-auto style="margin: 0px 10px;">
+          </ion-col>
+          <ion-col col-auto style="margin: 0px 10px;">
 
-        </ion-col>
-        <ion-col class="seat">
+          </ion-col>
+          <ion-col class="seat">
             <button (click)="reportSeat(i + seatBlockB.rowStart + 'D')"> {{i+seatBlockB.rowStart}}D </button>
-        </ion-col>
-        <ion-col class="seat">
+          </ion-col>
+          <ion-col class="seat">
             <button (click)="reportSeat(i + seatBlockB.rowStart + 'E')"> {{i+seatBlockB.rowStart}}E </button>
-        </ion-col>
-        <ion-col class="seat">
+          </ion-col>
+          <ion-col class="seat">
             <button (click)="reportSeat(i + seatBlockB.rowStart + 'G')"> {{i+seatBlockB.rowStart}}G </button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
 
-    <div class="exit exit--back fuselage">
+      <div class="exit exit--back fuselage">
 
+      </div>
     </div>
   </div>
 </ion-content>

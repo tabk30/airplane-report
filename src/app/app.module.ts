@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { Camera } from '@ionic-native/camera';
+import { Network } from '@ionic-native/network';
 
 
 import { MyApp } from './app.component';
@@ -19,6 +20,7 @@ import { FilePath } from '@ionic-native/file-path';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { SQLite } from '@ionic-native/sqlite';
 import { SqliteProvider } from '../providers/sqlite/sqlite';
+import { NetworkCheckingProvider } from '../providers/network-checking/network-checking';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { SqliteProvider } from '../providers/sqlite/sqlite';
     FilePath,
     AndroidPermissions,
     SQLite,
-    SqliteProvider
+    SqliteProvider,
+    Network,
+    NetworkCheckingProvider
   ]
 })
 export class AppModule {}

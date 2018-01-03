@@ -8,6 +8,8 @@ import { File } from '@ionic-native/file';
 import { SqliteProvider } from '../../providers/sqlite/sqlite';
 import { ListPage } from '../list/list';
 import { LoadingProvider } from '../../providers/loading/loading';
+import { NetworkCheckingProvider } from '../../providers/network-checking/network-checking';
+import { AlertController } from 'ionic-angular';
 
 declare var cordova: any;
 
@@ -22,7 +24,7 @@ declare var cordova: any;
   templateUrl: 'report.html',
 })
 export class ReportPage {
-  public imagePath: string = null;
+  public base64Image: string = null;
   private seatId: string;
   private report: string;
 
@@ -35,7 +37,9 @@ export class ReportPage {
     private file: File,
     private filePath: FilePath,
     private sql: SqliteProvider,
-    private loading: LoadingProvider
+    private loading: LoadingProvider,
+    private network: NetworkCheckingProvider,
+    private alertCtrl: AlertController
   ) {
     this.seatId = this.navParams.get('seatId');
   }
@@ -46,39 +50,22 @@ export class ReportPage {
 
   public takePicture() {
     let options: CameraOptions;
-    if (this.platform.is('ios')) {
-      // This will only print when on iOS
-      options = {
-        quality: 50,
-        destinationType: this.camera.DestinationType.FILE_URI,
-        encodingType: this.camera.EncodingType.JPEG,
-        mediaType: this.camera.MediaType.PICTURE
-      };
-    } else if (this.platform.is('android')) {
-      options = {
-        quality: 50,
-        destinationType: this.camera.DestinationType.NATIVE_URI,
-        encodingType: this.camera.EncodingType.JPEG,
-        mediaType: this.camera.MediaType.PICTURE
-      };
-    }
+    options = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      sourceType: this.camera.PictureSourceType.CAMERA,
+      allowEdit: true,
+      encodingType: this.camera.EncodingType.JPEG,
+      saveToPhotoAlbum: false
+    };
+
 
     this.camera.getPicture(options).then((imagePath) => {
-      if (this.platform.is('android')) {
-        this.filePath.resolveNativePath(imagePath)
-          .then(filePath => {
-            let correctPath: string = filePath.substr(0, filePath.lastIndexOf('/') + 1);
-            let currentName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.length);
-
-            let newPath = correctPath.replace("cache/", "files/");
-            this.copyFileToLocalDir(correctPath, currentName, newPath, this.createFileName());
-          });
-      } else {
-        let correctPath: string = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
-        let currentName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.length);
-
-        let newPath = correctPath.replace("cache/", "files/");
-        this.copyFileToLocalDir(correctPath, currentName, newPath, this.createFileName());
+      console.log("ReportPage:takePicture imagePath", imagePath);
+      // this.base64Image = "data:image/jpeg;base64," + imagePath;
+      if (this.platform.is('ios')) {
+        this.base64Image = imagePath;
+        this.base64Image = this.base64Image.replace(/^file:\/\//, '');
       }
     }, (err) => {
       // Handle error
@@ -93,28 +80,50 @@ export class ReportPage {
     return newFileName;
   }
 
-  // Copy the image to a local folder
-  private copyFileToLocalDir(namePath, currentName, newpath, newFileName) {
-    this.file.copyFile(namePath, currentName, newpath, newFileName).then(success => {
-      this.imagePath = newpath + newFileName;
-    }, error => {
-      console.log("ReportPage:copyFileToLocalDir error", error);
-    });
-  }
-
   public saveData() {
-    this.loading.startLoading();
-    setTimeout(
-      () => {
-        this.loading.close();
-        let day = new Date();
-        let createAt: string = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate() + ' ' + day.getHours() + ' ' + day.getMinutes();
-        this.sql.insertReport(this.seatId, this.report, this.imagePath, 0, createAt);
-        this.navCtrl.push(ListPage);
-      },
-      500
-    );
+    if (!this.network.getNetworkStatus()) {
+      let alert = this.alertCtrl.create({
+        title: 'Confirm',
+        message: 'Đang không có kết nối internet, lưu dữ liệu vào local!!',
+        buttons: [
+          {
+            text: 'OK',
+            role: 'ok',
+            handler: () => {
+              console.log('Cancel clicked');
+              this.loading.startLoading();
+              setTimeout(
+                () => {
+                  this.loading.close();
+                  let day = new Date();
+                  let createAt: string = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate() + ' ' + day.getHours() + ' ' + day.getMinutes();
+                  this.sql.insertReport(this.seatId, this.report, this.base64Image, 0, createAt);
+                  this.navCtrl.push(ListPage);
+                },
+                500
+              );
+            }
+          }
+        ]
+      });
+      alert.present();
+    } else {
+      this.loading.startLoading();
+      setTimeout(
+        () => {
+          this.loading.close();
+          let day = new Date();
+          let createAt: string = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate() + ' ' + day.getHours() + ' ' + day.getMinutes();
+          this.sql.insertReport(this.seatId, this.report, this.base64Image, 0, createAt);
+          this.navCtrl.push(ListPage);
+        },
+        500
+      );
+    }
+
 
   }
+
+
 
 }

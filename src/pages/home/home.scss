@@ -8,7 +8,8 @@ page-home {
       
       .plane {
         margin: 20px auto;
-        max-width: 500px;
+        max-width: 400px;
+        max-height: 100%;
       }
       
       .cockpit {
@@ -116,6 +117,17 @@ page-home {
           margin: 0px;
         }
       }
-      
-      
+      @media screen and (orientation: portrait) {
+        #airplanne {
+          width: 100%;
+        }
+      }
+
+      #container_2 {
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
 }
