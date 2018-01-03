@@ -10,6 +10,7 @@ import { ListPage } from '../list/list';
 import { LoadingProvider } from '../../providers/loading/loading';
 import { NetworkCheckingProvider } from '../../providers/network-checking/network-checking';
 import { AlertController } from 'ionic-angular';
+import { SokujobAPIService } from '../../providers/http/sokujob-api.service';
 
 declare var cordova: any;
 
@@ -27,7 +28,8 @@ export class ReportPage {
   public base64Image: string = null;
   private seatId: string;
   private report: string;
-
+  public cat: string = "CAT1";
+  public createAt: string = "";
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -39,9 +41,12 @@ export class ReportPage {
     private sql: SqliteProvider,
     private loading: LoadingProvider,
     private network: NetworkCheckingProvider,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private http: SokujobAPIService
   ) {
     this.seatId = this.navParams.get('seatId');
+    let day = new Date();
+    this.createAt = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate();
   }
 
   ionViewDidLoad() {
@@ -73,14 +78,8 @@ export class ReportPage {
     });
   }
 
-  private createFileName() {
-    var d = new Date(),
-      n = d.getTime(),
-      newFileName = n + ".jpg";
-    return newFileName;
-  }
-
   public saveData() {
+    console.log("saveData: this.cat", this.cat);
     if (!this.network.getNetworkStatus()) {
       let alert = this.alertCtrl.create({
         title: 'Confirm',
@@ -95,9 +94,7 @@ export class ReportPage {
               setTimeout(
                 () => {
                   this.loading.close();
-                  let day = new Date();
-                  let createAt: string = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate() + ' ' + day.getHours() + ' ' + day.getMinutes();
-                  this.sql.insertReport(this.seatId, this.report, this.base64Image, 0, createAt);
+                  this.sql.insertReport(this.seatId, this.report, this.base64Image, 0, this.createAt);
                   this.navCtrl.push(ListPage);
                 },
                 500
@@ -112,18 +109,25 @@ export class ReportPage {
       setTimeout(
         () => {
           this.loading.close();
-          let day = new Date();
-          let createAt: string = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate() + ' ' + day.getHours() + ' ' + day.getMinutes();
-          this.sql.insertReport(this.seatId, this.report, this.base64Image, 0, createAt);
+
+          this.http.post("", {
+            seat: this.seatId,
+            status: "raised",
+            case: this.cat,
+            w_o: "",
+            comment: this.report
+          }).subscribe(
+            () => { },
+            () => { }
+            );
+
+          this.sql.insertReport(this.seatId, this.report, this.base64Image, 1, this.createAt);
           this.navCtrl.push(ListPage);
         },
         500
       );
     }
-
-
   }
-
 
 
 }

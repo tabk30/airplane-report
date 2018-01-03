@@ -7,22 +7,48 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>report</ion-title>
+    <ion-title>report {{seatId}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
-
 <ion-content>
-  <ion-grid >
+  <ion-grid>
     <ion-row style="height: 200px; width:100%;" text-center>
-        <img style="max-width: 100%;max-height: 100%;" [src]="base64Image" *ngIf="base64Image"/>
+      <img style="max-width: 100%;max-height: 100%;" [src]="base64Image" *ngIf="base64Image" />
+    </ion-row>
+    <ion-row style="width:100%;">
+      <ion-list radio-group [(ngModel)]="cat">
+        <ion-list-header>
+          CAT
+        </ion-list-header>
+
+        <ion-item>
+          <ion-label>Red</ion-label>
+          <ion-radio value="CAT1" checked="true"></ion-radio>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Orange</ion-label>
+          <ion-radio value="CAT2"></ion-radio>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Yellow</ion-label>
+          <ion-radio value="CAT3"></ion-radio>
+        </ion-item>
+
+      </ion-list>
+    </ion-row>
+    <ion-row style="width:100%;">
+      <ion-item>Raised Time: {{createAt}}</ion-item>
     </ion-row>
     <ion-row style="width:100%;">
       <ion-item>
         <ion-textarea [(ngModel)]="report" rows="5" maxLength="500" placeholder="Enter a report"></ion-textarea>
       </ion-item>
     </ion-row>
+
     <ion-row style="width:100%;">
       <div style="margin: 0 auto;width: 70px;">
         <button (click)="saveData()" ion-button>Save</button>

@@ -21,6 +21,15 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { SQLite } from '@ionic-native/sqlite';
 import { SqliteProvider } from '../providers/sqlite/sqlite';
 import { NetworkCheckingProvider } from '../providers/network-checking/network-checking';
+import { HttpProvider } from '../providers/http/http';
+import { SokujobAPIService } from '../providers/http/sokujob-api.service';
+import { CacheService } from '../providers/http/cache.service';
+import { SKLocalStorageService } from '../providers/http/sk-local-storage.service';
+import { HttpHandleService } from '../providers/http/http-handle.service';
+import { HttpService } from '../providers/http/http.service';
+import { HttpResponseService } from '../providers/http/http-response.service';
+import { HttpModule, JsonpModule } from '@angular/http';
+
 
 @NgModule({
   declarations: [
@@ -32,6 +41,8 @@ import { NetworkCheckingProvider } from '../providers/network-checking/network-c
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    HttpModule,
+    JsonpModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -53,7 +64,14 @@ import { NetworkCheckingProvider } from '../providers/network-checking/network-c
     SQLite,
     SqliteProvider,
     Network,
-    NetworkCheckingProvider
+    NetworkCheckingProvider,
+    HttpProvider,
+    SokujobAPIService,
+    CacheService,
+    SKLocalStorageService,
+    HttpHandleService,
+    HttpResponseService,
+    HttpService
   ]
 })
 export class AppModule {}
